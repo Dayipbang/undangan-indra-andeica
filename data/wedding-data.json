@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "couple": {
+    "groom": {
+      "fullName": "Indra Lesmana",
+      "nickname": "Indra",
+      "father": "Dodo",
+      "mother": "Eti",
+      "childOrder": 4,
+      "address": "Sindang Fallah",
+      "instagram": "https://www.instagram.com/indra_lesmanabc?rpxt=MWN0NDUxNTQ4czdiZQ=="
+    },
+    "bride": {
+      "fullName": "Trisa Juniar",
+      "nickname": "Ande Ica",
+      "father": "Agus",
+      "mother": "Aisah",
+      "childOrder": 3,
+      "address": "Cikadu",
+      "instagram": ""
+    }
+  },
+  "event": {
+    "isoDate": "2027-03-15T07:00:00+07:00",
+    "displayDate": "Senin, 15 Maret 2027",
+    "akad": "07.00 WIB",
+    "reception": "10.00 WIB s/d selesai",
+    "venue": "Kediaman Mempelai Wanita",
+    "mapsUrl": "https://maps.app.goo.gl/prhjbbGHY4yetqcA8"
+  },
+  "gift": {
+    "bank": "BRI",
+    "accountNumber": "074701038536530",
+    "accountName": "Indra Lesman",
+    "ewallet": "DANA",
+    "ewalletNumber": "081573083307"
+  },
+  "media": {
+    "cover": "assets/images/cover/sampul.jpg",
+    "groomProfile": "assets/images/profiles/indra.jpg",
+    "brideProfile": "assets/images/profiles/ande-ica.jpeg",
+    "music": "assets/audio/musik-latar.mp3",
+    "videoCall": "assets/video/video-call.mp4",
+    "voiceCall": "assets/audio/voice-call.mp3",
+    "gallery": [
+      "assets/images/gallery/foto-1.jpeg",
+      "assets/images/gallery/foto-2.jpeg",
+      "assets/images/gallery/foto-3.jpeg",
+      "assets/images/gallery/foto-4.jpeg",
+      "assets/images/gallery/foto-5.jpeg",
+      "assets/images/gallery/foto-6.jpeg"
+    ]
+  }
+}

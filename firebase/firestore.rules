@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function validName(name) {
+      return name is string && name.size() >= 1 && name.size() <= 60;
+    }
+
+    // Ucapan terlihat semua pengunjung dan hanya dapat dibuat, bukan diedit/dihapus.
+    match /wishes/{id} {
+      allow read: if true;
+      allow create: if validName(request.resource.data.name)
+        && request.resource.data.text is string
+        && request.resource.data.text.size() >= 1
+        && request.resource.data.text.size() <= 300
+        && request.resource.data.tamuId is string;
+      allow update, delete: if false;
+    }
+
+    // RSVP terlihat real-time. Pengunjung dapat membuat, mengganti, atau membatalkan pilihannya.
+    match /rsvp/{id} {
+      allow read: if true;
+      allow create, update: if validName(request.resource.data.name)
+        && request.resource.data.opt in ['h', 'b', 'r'];
+      allow delete: if true;
+    }
+
+    // Daftar peserta yang pernah masuk grup.
+    match /joins/{id} {
+      allow read: if true;
+      allow create, update: if validName(request.resource.data.name)
+        && request.resource.data.tamuId is string;
+      allow delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

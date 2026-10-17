@@ -1,0 +1,9 @@
+# secrets/admin credentials
+service-account*.json
+*private-key*
+.env
+.env.*
+# local/editor
+.DS_Store
+Thumbs.db
+.vscode/
