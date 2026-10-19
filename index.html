@@ -7,13 +7,22 @@
 <meta property="og:title" content="The Wedding of Indra & Ande Ica 💍">
 <meta property="og:description" content="Undangan digital — Senin, 15 Maret 2027. Klik untuk buka!">
 <meta property="og:type" content="website">
-<meta name="theme-color" content="#0f766e">
+<meta name="theme-color" content="#064e46">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 
+
+
+
+
+
+
 <link rel="stylesheet" href="css/style.css">
-  <meta name="application-name" content="Undangan Indra & Ande Ica">
 </head>
 <body>
 
@@ -23,33 +32,41 @@
 
     <!-- ============ LANDING ============ -->
     <section class="screen active" id="screen-landing">
-      <header class="landing-head">
-        <div class="lh-row">
+      <div class="landing-hero">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-top">
           <span class="back">←</span>
           <div class="group-ava">
             <div class="a1 photo-indra"></div><div class="a2 photo-ande"></div><div class="bdg">💍</div>
             <div class="unread-badge" id="landing-badge" style="display:none">1</div>
           </div>
-          <div class="lh-title">
+          <div class="ht">
             <h1>Grup Hajatan <span>🔒</span></h1>
-            <p>Undangan digital · Indra &amp; Ande Ica</p>
+            <p>undangan digital · indra &amp; ande ica</p>
           </div>
-          <div class="lh-ic"><span>⋮</span></div>
+          <span class="hdots">⋮</span>
         </div>
-      </header>
+        <div class="hero-mid">
+          <p class="hero-eyebrow">✦ THE WEDDING OF ✦</p>
+          <h2 class="hero-names">Indra <span class="amp">&amp;</span> Ande Ica</h2>
+          <div class="hero-script">akhirnya nikah, guysss! 🎉</div>
+          <div class="hero-date">SENIN · 15 MARET 2027</div>
+        </div>
+      </div>
       <div class="landing-body">
-        <div class="invite-banner">
-          <img class="cover-photo" src="assets/images/cover/sampul.jpg" alt="Foto sampul undangan Indra dan Ande Ica">
+        <div class="ticker"><div class="ticker-track" id="ticker-track"></div></div>
+        <div class="invite-card">
           <div class="stars">✦ ✦ ✦</div>
-          <h2>The Wedding of<br><span class="amp">Indra &amp; Ande Ica</span></h2>
-          <p>Assalamualaikum Wr. Wb.<br>Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk bergabung di grup ini dan memberikan doa restu.</p>
+          <h2>Assalamualaikum<br>Wr. Wb.</h2>
+          <p>Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk bergabung di grup ini dan memberikan doa restu.</p>
           <div class="orn">❦ ───── ୨୧ ───── ❦</div>
         </div>
         <div class="join-wrap">
-          <button class="btn-join" onclick="handleJoinClick()">💬 &nbsp;Join Grup</button>
-          <p class="join-note">Masuk ke ruang obrolan untuk membaca pengumuman dari mempelai ✨</p>
+          <button class="btn-join" onclick="handleJoinClick()">💬 &nbsp;Join Grup Hajatan</button>
+          <p class="join-note">masuk yuk, ada pengumuman seru! ✨</p>
         </div>
-        <p class="landing-foot">— SENIN, 15 MARET 2027 —<br>Cikadi, Desa Girimukti, Kec. Singajaya, Kab. Garut</p>
+        <p class="landing-foot">KEDIAMAN MEMPELAI WANITA<br>Kediaman Mempelai Wanita</p>
       </div>
     </section>
 
@@ -57,17 +74,18 @@
     <section class="screen" id="screen-chat">
       <header class="wa-head">
         <span class="back" onclick="goLanding()">←</span>
-        <div class="mini-ava" onclick="openGroupInfo()"><div class="m1 photo-indra"></div><div class="m2 photo-ande"></div></div>
+        <div class="head-emblem" onclick="openGroupInfo()">I<span>&amp;</span>A</div>
         <div class="head-info" onclick="openGroupInfo()">
           <div class="head-name">Grup Hajatan <span>🔒</span></div>
-          <div class="head-status" id="head-status">Indra, Ande Ica, kamu</div>
+          <div class="head-status" id="head-status"><i class="dot"></i><span id="hs-text">indra, ande ica, kamu</span></div>
         </div>
         <div class="head-ic">
-          <span title="Panggilan video" onclick="openVideoCall()">📹</span>
-          <span title="Panggilan suara" onclick="openVoiceCall()">📞</span>
-          <span title="Menu" onclick="toggleMenu(event)">⋮</span>
+          <span class="ic-pill" title="Panggilan video" onclick="openVideoCall()">📹</span>
+          <span class="ic-pill" title="Panggilan suara" onclick="openVoiceCall()">📞</span>
+          <span class="ic-pill" title="Menu" onclick="toggleMenu(event)">⋮</span>
         </div>
       </header>
+      <div class="bunting" aria-hidden="true"></div>
 
       <div class="pin-bar" id="pin-bar" onclick="openModal('modal-event')">
         <span class="pin-ic">📌</span>
@@ -132,36 +150,54 @@
         <h2>Info grup</h2>
       </header>
       <div class="info-scroll">
-        <div class="info-hero">
-          <div class="group-ava"><div class="a1 photo-indra"></div><div class="a2 photo-ande"></div><div class="bdg">💍</div></div>
-          <div><h2>Grup Hajatan <span>🔒</span></h2><p>Grup · Dibuat oleh Indra</p></div>
-        </div>
-        <div class="info-sec">
-          <div class="sec-label">Deskripsi</div>
-          <p class="info-desc">Grup resmi undangan pernikahan <b>Indra &amp; Ande Ica</b> 🎉 Senin, 15 Maret 2027 di Cikadi, Desa Girimukti, Kec. Singajaya, Kab. Garut. Silakan tinggalkan ucapan &amp; doa di kolom chat.</p>
-        </div>
-        <div class="info-sec">
-          <div class="sec-label" style="display:flex;justify-content:space-between">Media, link, dan dok <small style="color:var(--ink-soft);font-weight:600">6 foto</small></div>
-          <div class="media-preview" id="media-preview"></div>
-          <div class="info-row" onclick="openOverlay('overlay-gallery')">
-            <span class="ri">🖼️</span><div class="rt"><b>Galeri Prewedding</b><small>Klik untuk lihat semua foto</small></div><span class="rarrow">›</span>
+        <div class="cover-card">
+          <img src="assets/images/cover/sampul.jpg" alt="Indra & Ande Ica" class="cover-img">
+          <div class="cover-overlay"></div>
+          <div class="cover-mid">
+            <div class="cover-eyebrow">✦ THE WEDDING OF ✦</div>
+            <div class="cover-names">Indra <span>&amp;</span> Ande Ica</div>
+            <div class="cover-date">SENIN · 15 MARET 2027</div>
+            <div class="cover-actions">
+              <button class="cover-link" onclick="downloadICS()">📅 Simpan ke Kalender</button>
+              <button class="cover-link" onclick="shareInvitation()">📤 Bagikan</button>
+            </div>
           </div>
+        </div>
+        <div class="info-sec">
+          <div class="sec-label">Tentang Mempelai 💑</div>
+          <div class="couple-wrap">
+            <div class="couple-card">
+              <div class="c-photo photo-indra"></div>
+              <b>Indra Lesmana</b>
+              <small>Putra ke-4 dari Bpk. Dodo &amp; Ibu Eti · Sindang Fallah</small>
+              <a class="ig-btn" href="https://www.instagram.com/indra_lesmanabc?rpxt=MWN0NDUxNTQ4czdiZQ==" target="_blank" rel="noopener">📷 Instagram</a>
+            </div>
+            <div class="couple-amp">&amp;</div>
+            <div class="couple-card">
+              <div class="c-photo photo-ande"></div>
+              <b>Trisa Juniar</b>
+              <small>Putri ke-3 dari Bpk. Agus &amp; Ibu Aisah · Cikadu</small>
+            </div>
+          </div>
+        </div>
+        <div class="info-sec">
+          <div class="sec-label">Menu Hajatan 🎪</div>
+          <div class="menu-grid">
+            <button class="menu-tile" onclick="openOverlay('overlay-gallery')"><span>🖼️</span><b>Galeri</b><small>Prewedding kami</small></button>
+            <button class="menu-tile" onclick="openOverlay('overlay-location')"><span>📍</span><b>Lokasi &amp; Denah</b><small>Petunjuk arah</small></button>
+            <button class="menu-tile" onclick="openModal('modal-event')"><span>📋</span><b>Rundown</b><small>Program acara</small></button>
+            <button class="menu-tile" onclick="openModal('modal-gift')"><span>💳</span><b>Amplop Digital</b><small>Kirim hadiah</small></button>
+          </div>
+        </div>
+        <div class="info-sec">
+          <div class="sec-label">Media, link, dan dok <span style="float:right;color:var(--ink-soft);font-weight:600">6 foto</span></div>
+          <div class="media-preview" id="media-preview"></div>
+        </div>
         <div class="info-sec">
           <div class="sec-label" id="peserta-label">Memuat peserta…</div>
           <div id="peserta-list"></div>
         </div>
-        <div class="info-sec">
-          <div class="info-row" onclick="openModal('modal-event')">
-            <span class="ri">📋</span><div class="rt"><b>Detail Acara &amp; Rundown</b><small>Jadwal akad &amp; resepsi</small></div><span class="rarrow">›</span>
-          </div>
-          <div class="info-row" onclick="openModal('modal-gift')">
-            <span class="ri">💳</span><div class="rt"><b>Amplop Digital</b><small>Kirim hadiah, suka-suka aja</small></div><span class="rarrow">›</span>
-          </div>
-          <div class="info-row" onclick="openOverlay('overlay-location')">
-            <span class="ri">📍</span><div class="rt"><b>Lokasi Acara</b><small>Cikadi, Desa Girimukti, Kec. Singajaya</small></div><span class="rarrow">›</span>
-          </div>
-        </div>
-        <p style="text-align:center;font-size:10.5px;color:#9aa9a6;padding:16px 0 24px">Undangan digital · Grup Hajatan 💚</p>
+        <p style="text-align:center;font-size:10.5px;color:#9aa9a6;padding:12px 0 20px">Undangan digital · Grup Hajatan 💚</p>
       </div>
     </section>
 
@@ -177,6 +213,7 @@
     <div class="lightbox" id="lightbox">
       <img id="lb-img" src="" alt="Foto mempelai">
       <div class="lb-cap" id="lb-cap"></div>
+      <div class="lb-count" id="lb-count"></div>
       <button class="lb-close" onclick="closeLightbox()">Tutup ✕</button>
     </div>
 
@@ -184,14 +221,14 @@
     <section class="overlay" id="overlay-location">
       <button class="floating-back" onclick="closeOverlay('overlay-location')" aria-label="Kembali ke chat">← Kembali</button>
       <div class="loc-map">
-        <iframe title="Peta lokasi acara" loading="lazy" src="https://www.google.com/maps?q=Cikadi,+Desa+Girimukti,+Kec.+Singajaya,+Kab.+Garut&output=embed"></iframe>
+        <div class="map-placeholder" role="img" aria-label="Lokasi acara"><span>📍</span><b>Lokasi Acara</b><small>Buka Google Maps untuk titik yang tepat</small></div>
       </div>
       <div class="loc-body">
         <div class="loc-pin-row">
           <div class="loc-pin-ic">📍</div>
           <div>
             <h3>Kediaman Mempelai Wanita</h3>
-            <p>Klik tombol di bawah untuk melihat titik lokasi acara yang benar.</p>
+            <p>Titik lokasi acara mengikuti tautan Google Maps resmi.</p>
           </div>
         </div>
         <div class="loc-cards">
@@ -203,6 +240,16 @@
     </section>
 
     <!-- ============ MODAL: DENAH ============ -->
+    <div class="modal-backdrop" id="modal-denah">
+      <div class="modal-card modal-denah">
+        <div class="modal-head">
+          <button class="modal-close" onclick="closeModal('modal-denah')">✕</button>
+          <div class="stars">✦ ✦ ✦</div>
+          <h2>🗺️ Denah Lokasi</h2>
+          <small>petunjuk arah ke lokasi acara</small>
+        </div>
+        <div class="modal-body"><div style="padding:28px;text-align:center;background:#fff;border-radius:14px;border:2.5px solid var(--ink);box-shadow:4px 4px 0 rgba(20,49,45,.3)"><div style="font-size:42px">🧭</div><b style="font-family:var(--font-display);color:var(--emerald-900)">Petunjuk lokasi</b><p style="margin-top:8px;color:#667">Buka titik lokasi acara melalui Google Maps.</p><a class="btn-maps" href="https://maps.app.goo.gl/prhjbbGHY4yetqcA8" target="_blank" rel="noopener">🧭 Buka Google Maps</a></div></div>
+      </div>
     </div>
 
     <!-- ============ MODAL: EVENT ============ -->
@@ -211,21 +258,41 @@
         <div class="modal-head">
           <button class="modal-close" onclick="closeModal('modal-event')">✕</button>
           <div class="stars">✦ ✦ ✦</div>
-          <h2>Detail Acara &amp; Rundown</h2>
-          <small>The Wedding of Indra &amp; Ande Ica</small>
+          <h2>Program Booklet 🎪</h2>
+          <small>the wedding of indra &amp; ande ica</small>
         </div>
         <div class="modal-body">
+          <div class="cd-hero">
+            <p class="cd-label">menuju hari bahagia 💍</p>
+            <div class="cd-boxes">
+              <div class="cd-box"><b id="cd-d">--</b><span>hari</span></div>
+              <div class="cd-box"><b id="cd-h">--</b><span>jam</span></div>
+              <div class="cd-box"><b id="cd-m">--</b><span>menit</span></div>
+              <div class="cd-box"><b id="cd-s">--</b><span>detik</span></div>
+            </div>
+            <div class="cd-bar"><i id="cd-bar-fill"></i></div>
+          </div>
           <div class="d-row"><div class="di">📅</div><div><b>Hari &amp; Tanggal</b><span>Senin, 15 Maret 2027</span></div></div>
           <div class="d-row"><div class="di">⏰</div><div><b>Waktu Acara</b><span>Pukul 07.00 WIB s/d selesai</span></div></div>
-          <div class="d-row"><div class="di">📍</div><div><b>Tempat Acara</b><span>Titik lokasi sesuai Google Maps</span></div></div>
-          <div class="rd-title">— Susunan Acara —</div>
-          <div class="rd-card">
-            <h4>🕌 Akad Nikah</h4>
-            <div class="rd-item"><div class="time">07.00</div><div class="desc"><b>Akad Nikah</b>Prosesi akad nikah dimulai pukul 07.00 WIB.</div></div>
+          <div class="d-row"><div class="di">📍</div><div><b>Tempat Acara</b><span>Titik lokasi sesuai Google Maps resmi</span></div></div>
+          <div class="d-row"><div class="di">🎭</div><div><b>Dress Code</b><span>Bebas sopan — nuansa putih &amp; hijau 💚</span></div></div>
+          <div class="d-row"><div class="di">🚗</div><div><b>Parkir</b><span>Area parkir luas tersedia di lokasi acara</span></div></div>
+          <div class="d-row" style="align-items:flex-start"><div class="di">📞</div><div style="flex:1"><b>Contact Person</b><span>Indra (Mempelai) — 0815 7308 3307</span>
+            <div class="contact-actions">
+              <a class="mini-act telp" href="tel:+6281573083307">📞 Telepon</a>
+              <a class="mini-act wa" href="https://wa.me/6281573083307?text=Assalamualaikum%2C%20terkait%20undangan%20pernikahan%20Indra%20%26%20Ande%20Ica%20%F0%9F%99%8F" target="_blank" rel="noopener">💬 WhatsApp</a>
+            </div>
+          </div></div>
+          <div class="rd-title">— susunan acara —</div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">07.00</div><div class="tl-body"><b>🕌 Akad Nikah</b><span>Prosesi akad nikah dimulai tepat pukul 07.00 WIB.</span></div></div>
+            <div class="tl-item"><div class="tl-time">09.00</div><div class="tl-body"><b>🤲 Doa Bersama</b><span>Ramah tamah keluarga &amp; doa bersama para tamu.</span></div></div>
+            <div class="tl-item"><div class="tl-time">10.00</div><div class="tl-body"><b>🎉 Resepsi</b><span>Penyambutan tamu, hiburan, dan hidangan hajatan 🍜.</span></div></div>
+            <div class="tl-item"><div class="tl-time">13.00</div><div class="tl-body"><b>📸 Foto Bersama</b><span>Sesi foto keluarga &amp; teman, lalu penutupan acara.</span></div></div>
           </div>
-          <div class="rd-card">
-            <h4>🎉 Resepsi Acara</h4>
-            <div class="rd-item"><div class="time">10.00<br>Selesai</div><div class="desc"><b>Resepsi</b>Penerimaan tamu dimulai pukul 10.00 WIB sampai selesai.</div></div>
+          <div class="modal-actions">
+            <button class="btn-join-submit" onclick="downloadICS(); closeModal('modal-event')">📅 &nbsp;Kalender</button>
+            <button class="btn-share" onclick="shareInvitation()">📤 &nbsp;Bagikan Undangan</button>
           </div>
         </div>
       </div>
@@ -238,7 +305,7 @@
           <button class="modal-close" onclick="closeModal('modal-guestbook')">✕</button>
           <div class="stars">✦ ✦ ✦</div>
           <h2>📖 Buku Tamu</h2>
-          <small>Ucapan, doa &amp; konfirmasi kehadiran</small>
+          <small>ucapan, doa &amp; konfirmasi kehadiran</small>
         </div>
         <div class="guest-list" id="guest-list"></div>
         <p class="guest-count" id="guest-count"></p>
@@ -247,11 +314,11 @@
 
     <!-- ============ MODAL: JOIN ============ -->
     <div class="modal-backdrop" id="modal-join">
-      <div class="modal-card" style="max-width:330px;border:none">
-        <div class="modal-head" style="border-radius:19px 19px 0 0">
+      <div class="modal-card" style="max-width:330px">
+        <div class="modal-head" style="border-radius:18px 18px 0 0">
           <div class="stars">✦ ✦ ✦</div>
           <h2>Selamat Datang 👋</h2>
-          <small>Isi nama kamu dulu ya, biar tercatat 🙏</small>
+          <small>isi nama dulu ya, biar tercatat 🙏</small>
         </div>
         <div class="modal-body">
           <input type="text" class="join-input" id="join-nama" placeholder="Contoh: Budi Santoso" maxlength="26" autocomplete="off">
@@ -266,7 +333,7 @@
         <div class="gift-head">
           <div class="stars">✦ ✦ ✦</div>
           <h2>Kirim Hadiah, Suka-Suka Aja 🎁</h2>
-          <small>Amplop Digital · Tanda Kasih untuk Kami</small>
+          <small>amplop digital · tanda kasih untuk kami</small>
         </div>
         <div class="gift-body">
           <div class="gift-tabs">
@@ -274,16 +341,22 @@
             <button class="gift-tab" id="tab-dana" onclick="giftTab('dana')">📱 DANA</button>
           </div>
           <div class="gift-pane active" id="pane-bri">
-            <div class="bank-chip">
-              <div class="bank-logo">BRI</div>
-              <div class="owner">a.n. Indra Lesman</div>
-              <div class="num" id="bank-number">0747 0103 8536 530</div>
-              <small>Bank Rakyat Indonesia · Transfer antar bank &amp; e-wallet didukung</small>
+            <div class="atm-card">
+              <div class="atm-top"><span class="atm-brand">BRI</span><span class="atm-type">GIFT CARD</span></div>
+              <div class="atm-chip"></div>
+              <div class="atm-num" id="bank-number">0747 0103 8536 530</div>
+              <div class="atm-owner">a.n. Indra Lesman<small>Bank Rakyat Indonesia</small></div>
             </div>
             <button class="btn-copy" onclick="copyRekening()">📋 &nbsp;Salin Nomor Rekening</button>
           </div>
           <div class="gift-pane" id="pane-dana">
-            <div class="bank-chip"><div class="bank-logo" style="background:#118eea">DANA</div><div class="owner">a.n. Indra Lesman</div><div class="num">0815 7308 3307</div><small>E-wallet DANA</small></div><button class="btn-copy" onclick="copyDana()">📋 &nbsp;Salin Nomor DANA</button>
+            <div class="atm-card">
+              <div class="atm-top"><span class="atm-brand" style="color:#7cc4ff">DANA</span><span class="atm-type">E-WALLET</span></div>
+              <div class="atm-chip"></div>
+              <div class="atm-num">0815 7308 3307</div>
+              <div class="atm-owner">a.n. Indra Lesman<small>Aplikasi DANA</small></div>
+            </div>
+            <button class="btn-copy" onclick="copyDana()">📋 &nbsp;Salin Nomor DANA</button>
             <p class="gift-note">Transfer melalui aplikasi DANA ke nomor di atas.</p>
           </div>
           <p class="gift-note">Kehadiran dan doa restu Anda adalah hadiah terindah bagi kami. Namun bila ingin berbagi tanda kasih, kami sediakan amplop digital ini dengan tulus. 🙏💚</p>
@@ -322,7 +395,7 @@
       <div class="voice-wrap">
         <div class="voice-status" id="voice-status">🔒 End-to-end encrypted · Memanggil…</div>
         <div class="voice-name">Indra &amp; Ande Ica 💍</div>
-        <div class="voice-sub">Grup Hajatan · Panggilan suara</div>
+        <div class="voice-sub">grup hajatan · panggilan suara</div>
         <div class="voice-ava">
           <div class="ring"></div><div class="ring"></div><div class="ring"></div>
           <div class="core">💑</div>
@@ -341,8 +414,10 @@
   </div>
 </div>
 
+
+
+<script src="data/wedding-data.js"></script>
 <script src="js/firebase-config.js"></script>
-<script src="js/wedding-config.js"></script>
-<script src="js/app.js"></script>
+<script src="js/config-loader.js"></script>
 </body>
 </html>

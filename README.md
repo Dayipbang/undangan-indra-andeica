@@ -1,31 +1,39 @@
-# Template Undangan Digital Indra & Ande Ica
+# Template Undangan Digital - Grup Hajatan
 
-Versi proyek yang dirapikan untuk GitHub Pages dan pengembangan produk undangan digital.
+Versi final hasil penggabungan tampilan baru dengan struktur proyek yang rapi.
 
-## Mulai cepat
-1. Edit data utama di `js/wedding-config.js`.
-2. Ganti media di folder `assets/` dengan nama file yang sama, atau perbarui jalurnya di konfigurasi.
-3. Isi `js/firebase-config.js` untuk mengaktifkan Firestore.
-4. Unggah seluruh isi folder ini ke root repository GitHub Pages.
+## Edit data klien
+
+Semua data utama diedit dari satu file:
+
+`data/wedding-data.js`
+
+Data yang tersedia: nama pasangan, tanggal, waktu, lokasi, Maps, rekening, e-wallet, foto, musik, video, dan galeri.
 
 ## Struktur
-- `index.html`: markup utama, jangan menaruh data rahasia.
-- `css/style.css`: tampilan utama.
-- `js/wedding-config.js`: pusat data dan jalur media yang benar-benar dipakai situs.
-- `data/wedding-data.json`: salinan data terstruktur untuk dokumentasi/integrasi produk. Jika mengubah data, sinkronkan juga `js/wedding-config.js`.
-- `js/firebase-config.js`: konfigurasi Web App Firebase, bukan service account.
-- `js/app.js`: logika undangan.
-- `admin.html`: dashboard admin awal.
-- `firebase/firestore.rules`: rules awal yang harus dipasang di Firebase Console.
 
-## Firebase
-Tempel objek Web App config ke `js/firebase-config.js`. Jangan pernah upload file service-account atau private key. Saat config belum diisi, komentar/RSVP tetap memakai localStorage sebagai fallback.
+- `index.html`: struktur tampilan.
+- `css/style.css`: seluruh desain dan animasi.
+- `js/config-loader.js`: memvalidasi data lalu menjalankan aplikasi.
+- `js/app.js`: seluruh interaksi undangan.
+- `js/firebase-config.js`: konfigurasi Firebase Web App.
+- `data/wedding-data.js`: satu-satunya sumber data klien.
+- `assets/`: media yang sudah dikelompokkan.
+- `admin.html`: dashboard admin.
+- `firebase/firestore.rules`: aturan keamanan Firestore.
 
-## Deploy GitHub Pages
-Pastikan `index.html` berada di root repository. Aktifkan Pages dari branch `main` folder `/ (root)`.
+## Cara menjalankan
 
-## Catatan lokasi
-Alamat tebakan Blok Mekar Rahayu/RT/RW telah dihapus. Tombol lokasi memakai `https://maps.app.goo.gl/prhjbbGHY4yetqcA8`.
+Website sekarang bisa dites dengan membuka `index.html` langsung dari file manager. Tidak perlu server lokal. Untuk fitur realtime Firebase, perangkat tetap memerlukan koneksi internet.
 
-## Versi
-`2.0.0-structured`
+## Deploy
+
+1. Upload seluruh isi folder ini ke root repository GitHub.
+2. Buka Settings > Pages.
+3. Pilih branch `main` dan folder `/ (root)`.
+4. Pasang isi `firebase/firestore.rules` melalui Firebase Console.
+5. Aktifkan Email/Password Authentication untuk dashboard admin.
+
+## Catatan keamanan
+
+Firebase Web App config boleh berada di frontend. Jangan pernah mengunggah service account, private key, atau password admin ke repository.

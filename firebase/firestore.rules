@@ -13,7 +13,7 @@ service cloud.firestore {
         && request.resource.data.text.size() >= 1
         && request.resource.data.text.size() <= 300
         && request.resource.data.tamuId is string;
-      allow update, delete: if false;
+      allow update, delete: if request.auth != null;
     }
 
     // RSVP terlihat real-time. Pengunjung dapat membuat, mengganti, atau membatalkan pilihannya.
@@ -21,7 +21,7 @@ service cloud.firestore {
       allow read: if true;
       allow create, update: if validName(request.resource.data.name)
         && request.resource.data.opt in ['h', 'b', 'r'];
-      allow delete: if true;
+      allow delete: if request.auth != null;
     }
 
     // Daftar peserta yang pernah masuk grup.
@@ -29,7 +29,7 @@ service cloud.firestore {
       allow read: if true;
       allow create, update: if validName(request.resource.data.name)
         && request.resource.data.tamuId is string;
-      allow delete: if false;
+      allow delete: if request.auth != null;
     }
 
     match /{document=**} {

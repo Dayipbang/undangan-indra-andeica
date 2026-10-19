@@ -1,8 +1,11 @@
 'use strict';
-/* ============================================================
-   CONFIG
-   ============================================================ */
+/* CONFIG dimuat dari data/wedding-data.js oleh config-loader.js */
 const CONFIG = window.WEDDING_CONFIG;
+const MEMBER_ROLE = {
+  pria: { label: 'MEMPELAI PRIA', icon: '💍', highlight: true },
+  wanita: { label: 'MEMPELAI WANITA', icon: '💍', highlight: true },
+  ustad: { label: 'USTAZ / PENGISI ACARA', icon: '🕌', highlight: false }
+};
 
 /* ============================================================
    🔥 FIREBASE
@@ -60,6 +63,30 @@ function nowTime(){
 function fmtDur(sec){ return String(Math.floor(sec/60)).padStart(2,'0') + ':' + String(sec%60).padStart(2,'0'); }
 function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
+/* ---------- CONFETTI ---------- */
+function confetti(){
+  const app = document.querySelector('.app');
+  const pieces = ['💛','✨','💚','🎉','💍','🌟','🎊'];
+  for (let i = 0; i < 30; i++){
+    const p = document.createElement('span');
+    p.className = 'confetti';
+    p.textContent = pieces[i % pieces.length];
+    p.style.left = (Math.random() * 100) + '%';
+    p.style.animationDuration = (1.4 + Math.random() * 1.4) + 's';
+    p.style.animationDelay = (Math.random() * 0.4) + 's';
+    p.style.fontSize = (13 + Math.random() * 11) + 'px';
+    app.appendChild(p);
+    setTimeout(()=> p.remove(), 3200);
+  }
+}
+
+/* ---------- TICKER ---------- */
+function buildTicker(){
+  const items = ['✦ HAJATAN!','🎉 MANTU KUY!','💍 INDRA & ANDE ICA','📅 SENIN, 15 MARET 2027','🎪 GRUP HAJATAN OFFICIAL','🍜 DATENG YA!'];
+  const half = items.map(t=>`<span>${t}</span>`).join('');
+  $('ticker-track').innerHTML = half + half;
+}
+
 /* ---------- SUARA POP ---------- */
 let actx = null;
 function ensureAudio(){
@@ -92,8 +119,8 @@ function showScreen(id){
 }
 function openOverlay(id){ closeMenu(); $(id).classList.add('active'); try{ history.pushState({overlay:id},'',location.href); }catch(e){} }
 function closeOverlay(id){ $(id).classList.remove('active'); }
-function openModal(id){ closeMenu(); const el=$(id); if(el) el.classList.add('active'); else console.warn('Modal tidak ditemukan:',id); }
-function closeModal(id){ const el=$(id); if(el) el.classList.remove('active'); }
+function openModal(id){ closeMenu(); $(id).classList.add('active'); }
+function closeModal(id){ $(id).classList.remove('active'); }
 function openGroupInfo(){ closeMenu(); renderPeserta(); showScreen('screen-info'); }
 function closeGroupInfo(){ showScreen('screen-chat'); }
 function goLanding(){ showScreen('screen-landing'); }
@@ -215,21 +242,25 @@ function sysMsg(text){
   scrollEl.appendChild(el);
 }
 function setStatus(txt, typing){
-  const st = $('head-status');
-  st.textContent = txt;
-  st.classList.toggle('typing', !!typing);
+  const hs = $('hs-text');
+  if (hs) hs.textContent = txt;
+  $('head-status').classList.toggle('typing', !!typing);
 }
 function addMessage(opts){
   const wrap = document.createElement('div');
   wrap.className = 'msg' + (opts.me ? ' out' : ' in');
-  const bubbleCls = 'bubble' + (opts.me ? ' tail-out' : ' tail-in');
+  const role = MEMBER_ROLE[opts.whoKey];
+  const bubbleCls = 'bubble' + (opts.me ? ' tail-out' : ' tail-in') + (role?.highlight ? ' bubble-vip' : '');
   const quoteHtml = opts.quote ? `<span class="quote"><b>${esc(opts.quote.name)}</b><span>${esc(opts.quote.text)}</span></span>` : '';
   const bodyHtml = opts.html || esc(opts.text || '').replace(/\n/g,'<br>');
   const inner = `${quoteHtml}${bodyHtml}<span class="meta">${esc(opts.time || nowTime())}${opts.me ? '<span class="ticks">✓✓</span>' : ''}</span>`;
+  const senderHtml = role
+    ? `${esc(opts.name)} <span class="vip-badge${role.highlight ? '' : ' role-badge'}">${role.icon} ${role.label}</span>`
+    : esc(opts.name);
   wrap.innerHTML = opts.me
     ? `<div class="col"><div class="${bubbleCls}">${inner}</div></div>`
     : `<div class="avatar" style="background:${opts.avaBg}">${opts.avatar}</div>
-       <div class="col"><div class="sender" style="color:${opts.color}">${esc(opts.name)}</div><div class="${bubbleCls}">${inner}</div></div>`;
+       <div class="col"><div class="sender" style="color:${opts.color}">${senderHtml}</div><div class="${bubbleCls}">${inner}</div></div>`;
   scrollEl.appendChild(wrap);
   if (!opts.silent){ pop(); notifyNew(); } else { scrollEl.scrollTop = scrollEl.scrollHeight; }
   if (opts.html && opts.html.indexOf('rsvp-poll') !== -1){
@@ -241,61 +272,65 @@ function showTyping(whoKey){
   const p = CONFIG[whoKey];
   const el = document.createElement('div');
   el.className = 'msg in typing'; el.id = 'typing-' + whoKey;
+  const role = MEMBER_ROLE[whoKey];
+  const senderHtml = role
+    ? `${esc(p.name)} <span class="vip-badge${role.highlight ? '' : ' role-badge'}">${role.icon} ${role.label}</span>`
+    : esc(p.name);
   el.innerHTML = `<div class="avatar" style="background:${p.avaBg}">${p.avatar}</div>
-    <div class="col"><div class="sender" style="color:${p.color}">${esc(p.name)}</div>
+    <div class="col"><div class="sender" style="color:${p.color}">${senderHtml}</div>
     <div class="bubble"><span class="d"></span><span class="d"></span><span class="d"></span></div></div>`;
   scrollEl.appendChild(el);
-  setStatus(p.name + ' typing…', true);
+  setStatus(p.name + ' lagi ngetik…', true);
   scrollEl.scrollTop = scrollEl.scrollHeight;
 }
 function hideTyping(whoKey){
   const el = $('typing-' + whoKey);
   if (el) el.remove();
-  setStatus('Indra, Ande Ica, kamu', false);
+  setStatus(`${CONFIG.pria.name}, ${CONFIG.wanita.name}, kamu`, false);
 }
 
 /* ---------- KARTU ---------- */
 function eventCardHtml(){
   return `<div class="card">
-    <div class="c-top"><span class="big">📅</span>
-      <div><b>${CONFIG.eventDateText}</b><small>Save the date!</small></div></div>
+    <div class="c-top"><span class="big">🎟️</span>
+      <div><b>${CONFIG.eventDateText}</b><small>Tiket resmi — save the date!</small></div></div>
     <div class="c-body">⏰ <b>${CONFIG.eventTime}</b><br>📍 ${CONFIG.eventPlace}</div>
     <button class="c-btn" onclick="openModal('modal-event')">📋 Lihat Detail &amp; Rundown Acara</button>
   </div>`;
 }
 function pollCardHtml(){
   return `<div class="poll" id="rsvp-poll">
-    <div class="p-q">🙋 Konfirmasi kehadiran yuk!</div>
-    <button class="p-opt" data-opt="h"><span class="radio"></span> Hadir, pasti! 🎉 <span class="p-count" data-c="h"></span></button>
+    <div class="p-q">🙋 Kupon Konfirmasi — hadir nggak nih?</div>
+    <button class="p-opt" data-opt="h"><span class="radio"></span> Hadir, gas! 🎉 <span class="p-count" data-c="h"></span></button>
     <button class="p-opt" data-opt="b"><span class="radio"></span> Berhalangan, doakan ya 🙏 <span class="p-count" data-c="b"></span></button>
-    <button class="p-opt" data-opt="r"><span class="radio"></span> Masih ragu 🤔 <span class="p-count" data-c="r"></span></button>
+    <button class="p-opt" data-opt="r"><span class="radio"></span> Masih mikir dulu 🤔 <span class="p-count" data-c="r"></span></button>
     <div class="p-foot" data-foot>Memuat suara…</div>
   </div>`;
 }
 function mediaCardHtml(){
   return `<div class="card">
-    <div class="c-top" style="background:linear-gradient(140deg,var(--teal-500),var(--teal-800));color:#fff">
+    <div class="c-top" style="background:linear-gradient(140deg,var(--teal-400),var(--emerald-900));color:#fff">
       <span class="big">📸</span>
       <div><b>Media, Lokasi &amp; Hadiah</b><small>Semua yang kamu butuhin 💚</small></div>
     </div>
-    <div class="c-body" style="padding:8px 10px;display:flex;flex-wrap:wrap">
+    <div class="c-body" style="padding:10px;display:flex;flex-wrap:wrap">
       <button class="c-btn-grid" onclick="openOverlay('overlay-gallery')">🖼️ Galeri</button>
       <button class="c-btn-grid" onclick="openOverlay('overlay-location')">📍 Lokasi</button>
       <button class="c-btn-grid" onclick="openModal('modal-gift')">💳 Hadiah</button>
-      <button class="c-btn-grid" onclick="window.open(CONFIG.mapsUrl,'_blank','noopener')">📍 Google Maps</button>
+      <button class="c-btn-grid" onclick="openModal('modal-denah')">🗺️ Denah</button>
     </div>
   </div>`;
 }
 function dalilCardHtml(){
-  return `<div class="card" style="border-color:#f59e0b">
-    <div class="c-top" style="background:linear-gradient(140deg,#fbbf24,#b45309);color:#fff">
+  return `<div class="card" style="border-color:var(--gold-2)">
+    <div class="c-top" style="background:linear-gradient(140deg,var(--gold),var(--gold-2))">
       <span class="big">🕌</span>
       <div><b>Dalil &amp; Doa Pernikahan</b><small>QS. Ar-Rum: 21</small></div>
     </div>
-    <div class="c-body" style="font-style:italic;font-size:12.5px;line-height:1.75;background:#fffef8">
+    <div class="c-body" style="font-style:italic;font-size:12.5px;line-height:1.75;background:#fffdf6">
       "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir."
     </div>
-    <div class="c-body" style="text-align:center;font-size:12px;color:var(--teal-800);padding-top:0">
+    <div class="c-body" style="text-align:center;font-size:12px;color:var(--emerald-900);padding-top:0">
       <b>بارك الله لكما وبارك عليكما وجمع بينكما في خير</b>
     </div>
   </div>`;
@@ -306,7 +341,7 @@ const SCRIPT = [
   { who:'wanita', text:'Assalamualaikum Wr. Wb. Hallo semua, apa kabar? 🥰\n\nKami punya kabar bahagia — kami akan MENIKAH! 💍✨\nSemoga kami diberi kelancaran, dan kalian semua diberi kesehatan untuk hadir di hari bahagia kami ya 🙏', t:1000 },
   { who:'pria',   html:eventCardHtml() + pollCardHtml(), t:1600 },
   { who:'wanita', html:mediaCardHtml(), t:1600 },
-  { who:'ustad',  text:'Assalamualaikum warahmatullahi wabarakatuh.\n\nBarakallahu laka wa baraka \'alaika wa jama\'a bainakuma fii khairin.\n\nSemoga Allah memberkahi pernikahan Indra & Ande Ica, menjadikan keluarga yang sakinah, mawaddah, warahmah. Aamiin ya Rabbal \'alamin 🤲', t:1800, dalil:true }
+  { who:'ustad',  text:'Assalamualaikum warahmatullahi wabarakatuh.\n\nBarakallahu laka wa baraka \'alaika wa jama\'a bainakuma fii khairin.\n\nSemoga Allah memberkahi pernikahan ${CONFIG.pria.name} & ${CONFIG.wanita.name}, menjadikan keluarga yang sakinah, mawaddah, warahmah. Aamiin ya Rabbal \'alamin 🤲', t:1800, dalil:true }
 ];
 
 /* ---------- JOIN FLOW ---------- */
@@ -328,6 +363,7 @@ function submitJoin(){
   GUEST_NAME = nama;
   simpanNama(nama);
   closeModal('modal-join');
+  confetti();
   startChat();
 }
 $('join-nama').addEventListener('keydown', e=>{ if (e.key === 'Enter') submitJoin(); });
@@ -343,7 +379,6 @@ function startChat(){
   if (joined) return;
   joined = true;
 
-  // Autoplay musik
   setTimeout(()=>{
     if (music.paused){
       const p = music.play();
@@ -473,6 +508,18 @@ function tickCountdown(){
   if (isNaN(target)){ el.textContent = '⚠️'; return; }
   const now = Date.now();
   const diff = target - now;
+  if ($('cd-d')){
+    const dd = Math.max(0, diff);
+    const s = Math.floor(dd/1000);
+    $('cd-d').textContent = String(Math.floor(s/86400)).padStart(2,'0');
+    $('cd-h').textContent = String(Math.floor(s%86400/3600)).padStart(2,'0');
+    $('cd-m').textContent = String(Math.floor(s%3600/60)).padStart(2,'0');
+    $('cd-s').textContent = String(s%60).padStart(2,'0');
+  }
+  if ($('cd-bar-fill')){
+    const TOTAL = 180*24*3600*1000;
+    $('cd-bar-fill').style.width = Math.min(100, Math.max(0, (1 - diff/TOTAL) * 100)) + '%';
+  }
   if (diff <= 0){
     const day = 24*3600*1000;
     el.textContent = (diff > -day) ? '🎉 HARI INI!' : 'Acara telah usai 💚';
@@ -537,14 +584,14 @@ function listenRSVP(){
 }
 
 async function voteRSVP(opt){
-  const label = { h:'Hadir, pasti! 🎉', b:'Berhalangan 🙏', r:'Masih ragu 🤔' }[opt];
+  const label = { h:'Hadir, gas! 🎉', b:'Berhalangan 🙏', r:'Masih mikir 🤔' }[opt];
+  if (opt === 'h' && myVote !== 'h') confetti();
   if (db){
     const ref = db.collection('rsvp').doc(getTamuId());
     try {
       const snap = await ref.get();
       if (snap.exists && snap.data().opt === opt){
-        await ref.delete();
-        toast('Pilihan dibatalkan');
+        toast('Pilihan ini sudah tersimpan');
       } else {
         await ref.set({
           opt, name: GUEST_NAME || 'Tamu',
@@ -597,15 +644,15 @@ function acUI(){
   return card ? { btn:card.querySelector('.ac-play'), fill:card.querySelector('.ac-fill'), time:card.querySelector('.ac-time') } : null;
 }
 function toggleMusic(btn){
-  const ui = acUI();
   if (music.paused){
     ensureAudio();
     const pr = music.play();
-    if (pr) pr.then(()=>{ if(ui) ui.btn.textContent = '⏸'; }).catch(()=>{
+    if (pr) pr.then(()=>{ const ui = acUI(); if (ui) ui.btn.textContent = '⏸'; }).catch(()=>{
       toast('Musik belum tersedia');
     });
   } else {
     music.pause();
+    const ui = acUI();
     if (ui) ui.btn.textContent = '▶';
   }
 }
@@ -642,26 +689,20 @@ function startVideoCall(){
   video.style.display = 'block';
   offline.style.display = 'none';
 
-  // Reset & load video
   try { video.pause(); } catch(e){}
   video.src = CONFIG.videoCallFile;
   video.muted = false;
   video.currentTime = 0;
   video.load();
 
-  // Handle error kalau file nggak ada
   video.onerror = ()=>{
     video.style.display = 'none';
     offline.style.display = 'flex';
   };
 
-  // Coba autoplay dengan suara
   const playPromise = video.play();
   if (playPromise) {
-    playPromise.then(()=>{
-      // Sukses autoplay dengan audio
-    }).catch(()=>{
-      // Autoplay dengan audio diblokir → coba mute
+    playPromise.then(()=>{}).catch(()=>{
       video.muted = true;
       vcAudioMuted = true;
       $('vc-mute').classList.add('off');
@@ -671,7 +712,6 @@ function startVideoCall(){
         p2.then(()=>{
           toast('Ketuk 🎙️ untuk mengaktifkan suara');
         }).catch(()=>{
-          // Benar-benar gagal
           video.style.display = 'none';
           offline.style.display = 'flex';
         });
@@ -744,7 +784,6 @@ function startVoiceCall(){
   audio.load();
 
   audio.onerror = ()=>{
-    // Diam aja, voice wrap tetap muncul
     console.warn('Voice audio error');
   };
 
@@ -806,7 +845,7 @@ $('voice-end').addEventListener('click', endVoiceCall);
 function downloadICS(){
   const ics = [
     'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//GrupHajatan//IndraAndeIca//ID','BEGIN:VEVENT',
-    'UID:ujen-eras-2025@gruphajatan','DTSTAMP:20261016T000000Z',
+    'UID:indra-ande-ica-2027@gruphajatan','DTSTAMP:20261016T000000Z',
     'DTSTART;TZID=Asia/Jakarta:20270315T070000',
     'SUMMARY:Akad Nikah & Resepsi Indra & Ande Ica 💍',
     'LOCATION:' + CONFIG.eventPlace,
@@ -823,6 +862,21 @@ function downloadICS(){
   toast('Undangan tersimpan ke kalender 📅✅');
 }
 
+/* ---------- BAGIKAN UNDANGAN ---------- */
+function shareInvitation(){
+  const base = location.href.split('?')[0];
+  const url = base + (GUEST_NAME ? '?to=' + encodeURIComponent(GUEST_NAME) : '');
+  const text = '💍 Undangan Pernikahan Indra & Ande Ica — Senin, 15 Maret 2027. Buka undangannya di sini: ' + url;
+  if (navigator.share){
+    navigator.share({ title:'Undangan Indra & Ande Ica 💍', text, url }).catch(()=>{});
+  } else {
+    const done = ()=> toast('Link undangan disalin 📋');
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(()=> toast('Gagal menyalin 🙏'));
+    } else toast('Gagal menyalin 🙏');
+  }
+}
+
 /* ---------- CONTEXT MENU ---------- */
 let ctxTimer = null, ctxTarget = null;
 function openCtx(bubble, x, y){
@@ -831,7 +885,7 @@ function openCtx(bubble, x, y){
   const nameEl = wrap.querySelector('.sender');
   const clone = bubble.cloneNode(true);
   clone.querySelectorAll('.meta').forEach(m=>m.remove());
-  ctxTarget = { wrap, name: nameEl ? nameEl.textContent.trim() : 'Pesan', text: clone.textContent.trim().slice(0, 90) };
+  ctxTarget = { wrap, name: nameEl ? nameEl.childNodes[0].textContent.trim() : 'Pesan', text: clone.textContent.trim().slice(0, 90) };
   const appRect = document.querySelector('.app').getBoundingClientRect();
   const menu = $('ctx-menu');
   menu.classList.add('active');
@@ -974,7 +1028,7 @@ async function renderGuestbook(){
       (w.quote ? `<div class="gq">↩ Membalas ${esc(w.quote.name)}: "${esc(w.quote.text)}"</div>` : '');
     list.appendChild(d);
   });
-  const label = { h:'Hadir 🎉', b:'Berhalangan 🙏', r:'Masih ragu 🤔' };
+  const label = { h:'Hadir 🎉', b:'Berhalangan 🙏', r:'Masih mikir 🤔' };
   $('guest-count').textContent = all.length + ' ucapan terkirim' + (myVote ? ' · RSVP kamu: ' + label[myVote] : '') + ' 💚';
 }
 
@@ -997,7 +1051,6 @@ async function sendMessage(){
 }
 $('btn-send').addEventListener('click', sendMessage);
 $('chat-text').addEventListener('keydown', e=>{ if (e.key === 'Enter') sendMessage(); });
-$('chat-text').addEventListener('focus', ()=>{ setTimeout(()=>{ scrollToBottom(true); $('chat-text').scrollIntoView({block:'nearest',behavior:'smooth'}); }, 250); });
 
 /* ---------- EMOJI ---------- */
 const EMOJIS = '😀 😁 😂 🤣 😊 😍 🥰 😘 😎 🤗 🤔 😴 😭 😅 🥳 🤩 😇 🙃 😉 🥺 😌 ✨ 💚 💍 🎉 🎊 🍜 🍰 🎶 🧋 🍢 🥘 💐 🙏 💕 💖 ❤️ 👍 👏 🎁 📅 📍 📖'.split(' ').filter(Boolean);
@@ -1020,18 +1073,11 @@ $('file-input').addEventListener('change', e=>{
 });
 
 /* ---------- GALERI ---------- */
-const GALLERY = [
-  { src:'assets/images/gallery/foto-1.jpeg', cap:'Galeri Indra & Ande Ica 1' },
-  { src:'assets/images/gallery/foto-2.jpeg', cap:'Galeri Indra & Ande Ica 2' },
-  { src:'assets/images/gallery/foto-3.jpeg', cap:'Galeri Indra & Ande Ica 3' },
-  { src:'assets/images/gallery/foto-4.jpeg', cap:'Galeri Indra & Ande Ica 4' },
-  { src:'assets/images/gallery/foto-5.jpeg', cap:'Galeri Indra & Ande Ica 5' },
-  { src:'assets/images/gallery/foto-6.jpeg', cap:'Galeri Indra & Ande Ica 6' }
-];
+const GALLERY = (CONFIG.gallery || []).map((src, i) => ({ src, cap: `Galeri ${CONFIG.pria.name} & ${CONFIG.wanita.name} ${i + 1}` }));
 function buildGallery(){
   const grid = $('gallery-grid');
   grid.innerHTML = '';
-  GALLERY.forEach(g=>{
+  GALLERY.forEach((g, idx)=>{
     const d = document.createElement('div');
     d.className = 'g-item';
     const img = document.createElement('img');
@@ -1041,6 +1087,7 @@ function buildGallery(){
     d.onclick = ()=>{
       $('lb-img').src = g.src;
       $('lb-cap').textContent = g.cap;
+      $('lb-count').textContent = (idx + 1) + ' / ' + GALLERY.length;
       $('lightbox').classList.add('active');
     };
     grid.appendChild(d);
@@ -1119,8 +1166,8 @@ window.addEventListener('beforeunload', ()=>{
 });
 
 /* ---------- INIT ---------- */
+buildTicker();
 buildEmojiPanel();
 buildGallery();
 $('ipt-nama').value = GUEST_NAME || '';
-if (!GUEST_NAME) $('chat-text').placeholder = 'Tulis ucapan & doa…';
 startBadge();
