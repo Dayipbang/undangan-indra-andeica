@@ -489,27 +489,102 @@ mark{background:var(--gold);border-radius:4px;padding:0 2px}
   border-color:#92400e;
 }
 
-/* ---------- REVISION: MOBILE CHAT COMPOSER ---------- */
-.chat-input-row{width:100%;min-width:0;box-sizing:border-box}
-.chat-input-row>.icon-btn{flex:0 0 42px}
-.input-pill{min-width:0;overflow:hidden}
-.btn-send{display:flex!important;visibility:visible!important;opacity:1!important;position:relative;z-index:3}
+/* ---------- FINAL MOBILE LAYOUT CORRECTION ---------- */
 @media (max-width:480px){
-  html,body{width:100%;height:100%;height:100dvh;overflow:hidden}
-  .phone{width:100vw;height:100vh;height:100dvh;max-width:none;max-height:none}
-  .app,.screen{width:100%;height:100%}
-  .chat-input{flex:0 0 auto;padding-bottom:env(safe-area-inset-bottom,0)}
-  .chat-input-row{gap:5px;padding:7px 6px 9px;align-items:center}
-  .chat-input-row>.icon-btn{width:40px;height:40px;flex-basis:40px}
-  .input-pill{flex:1 1 0;width:0;min-height:42px;padding:3px 5px 3px 9px;border-width:2px}
+  html,body{
+    width:100%;
+    height:100%;
+    min-height:100%;
+    overflow:hidden;
+    overscroll-behavior:none;
+  }
+  body{display:block;min-height:100vh}
+  .phone{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100vh;
+    min-height:0;
+    max-width:none;
+    max-height:none;
+    padding:0;
+    border-radius:0;
+  }
+  .app,.screen{width:100%;height:100%;min-height:0;border-radius:0}
+  #screen-landing{overflow:hidden}
+  .landing-hero{
+    flex:0 0 clamp(258px,46%,390px);
+    height:auto;
+    min-height:0;
+  }
+  .hero-top{padding:calc(16px + env(safe-area-inset-top,0px)) 14px 0;gap:9px}
+  .group-ava{width:52px;height:52px;flex-basis:52px}
+  .group-ava .a1,.group-ava .a2{width:37px;height:37px;font-size:17px;border-width:2px}
+  .hero-top h1{font-size:15.5px}
+  .hero-top p{font-size:14px}
+  .hero-mid{padding:4px 18px 10px;justify-content:center}
+  .hero-eyebrow{font-size:9px;letter-spacing:3px;margin-bottom:4px}
+  .hero-names{font-size:clamp(29px,9vw,36px);line-height:1}
+  .hero-names .amp{font-size:.76em}
+  .hero-script{font-size:19px;margin-top:4px}
+  .hero-date{font-size:10.5px;margin-top:9px;padding:5px 12px}
+  .landing-body{
+    min-height:0;
+    padding:11px 14px calc(15px + env(safe-area-inset-bottom,0px));
+    overscroll-behavior:contain;
+  }
+  .ticker{margin-bottom:10px}
+  .ticker-track{font-size:11px;padding:5px 0}
+  .invite-card{padding:17px 15px 15px;border-radius:17px}
+  .invite-card::before{inset:6px}
+  .invite-card .stars{margin-bottom:4px}
+  .invite-card h2{font-size:20px}
+  .invite-card p{font-size:12px;margin-top:6px;line-height:1.5}
+  .invite-card .orn{margin-top:7px}
+  .join-wrap{margin-top:12px}
+  .btn-join{padding:12px;font-size:14.5px;border-radius:15px}
+  .join-note{font-size:15px;margin-top:7px}
+  .landing-foot{font-size:9.5px;margin-top:10px;line-height:1.45}
+
+  /* Chat: header dan composer stabil, hanya daftar pesan yang bergerak. */
+  #screen-chat{overflow:hidden}
+  .chat-scroll{min-height:0;overscroll-behavior:contain}
+  .chat-input{flex:0 0 auto;padding-bottom:env(safe-area-inset-bottom,0px)}
+  .chat-input-row{width:100%;min-width:0;gap:5px;padding:7px 6px 9px;align-items:center}
+  .chat-input-row>.icon-btn{width:40px;height:40px;flex:0 0 40px}
+  .input-pill{flex:1 1 0;width:0;min-width:0;min-height:42px;padding:3px 5px 3px 9px;overflow:hidden;border-width:2px}
   .input-pill .ipt-nama{max-width:62px;min-width:42px;font-size:11.5px;padding:8px 0}
   .input-pill .ipt-divider{margin:0 5px}
   .input-pill .ipt-text{width:0;min-width:0;font-size:13px;padding:8px 0}
-  .btn-send{width:42px;height:42px;flex:0 0 42px;border-width:2px}
+  .btn-send{display:flex!important;visibility:visible!important;opacity:1!important;width:42px;height:42px;flex:0 0 42px;border-width:2px;position:relative;z-index:3}
+}
+@supports (height:100svh){
+  @media (max-width:480px){
+    body,.phone{height:100svh;min-height:100svh}
+  }
 }
 @media (max-width:350px){
   .chat-input-row{gap:4px;padding-left:4px;padding-right:4px}
   .chat-input-row>.icon-btn{width:38px;height:38px;flex-basis:38px}
   .input-pill .ipt-nama,.input-pill .ipt-divider{display:none}
   .btn-send{width:40px;height:40px;flex-basis:40px}
+}
+@media (max-width:480px) and (max-height:700px){
+  .landing-hero{flex-basis:42%;min-height:230px}
+  .hero-top{padding-top:calc(9px + env(safe-area-inset-top,0px))}
+  .group-ava{width:44px;height:44px;flex-basis:44px}
+  .group-ava .a1,.group-ava .a2{width:32px;height:32px;font-size:15px}
+  .hero-names{font-size:28px}
+  .hero-script{font-size:17px}
+  .hero-date{margin-top:6px}
+  .landing-body{padding-top:8px}
+  .ticker{margin-bottom:7px}
+  .invite-card{padding:14px 13px 12px}
+  .invite-card .stars,.invite-card .orn{display:none}
+  .invite-card h2{font-size:18px}
+  .invite-card p{font-size:11.5px;line-height:1.4;margin-top:4px}
+  .join-wrap{margin-top:9px}
+  .btn-join{padding:10px}
+  .join-note{margin-top:5px}
+  .landing-foot{margin-top:7px}
 }
